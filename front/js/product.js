@@ -1,6 +1,6 @@
 const url = new URL(window.location);
 const id = url.searchParams.get("id");
-console.log(id);
+// console.log(id);
 
 const kanapImg = document.querySelector(".item__img");
 // console.log(itemImg);
@@ -18,18 +18,10 @@ const kanapColorChoice = document.getElementById("colors");
 // console.log(kanapColorChoice);
 
 const kanapQuantity = document.getElementById("quantity");
-console.log(kanapQuantity);
+// console.log(kanapQuantity);
 
 const btnAddToCart = document.getElementById("addToCart");
 // console.log(btnAddToCart);
-
-// class Cart {
-//     constructor(id, color, quantity) {
-//         this.id = id;
-//         this.color = color;
-//         this.quantity = quantity;
-//     }
-// }
 
 // Récupère le kanap en fonction de son ID dans l'API
 async function getKanap(idKanap) {
@@ -47,6 +39,7 @@ async function getKanap(idKanap) {
 function numberWithSpace(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
+
 // Affiche les informations du kanap
 async function displayInfo() {
     let product = await getKanap(id);
@@ -58,18 +51,8 @@ async function displayInfo() {
         kanapColorChoice.innerHTML += `<option value="${product.colors[i]}">${product.colors[i]}</option>
         `;
     }
-    console.log(product);
+    // console.log(product);
 }
-
-//
-//
-//
-//
-// const productCart = {
-//     id: id,
-//     color: kanapColorChoice.options[kanapColorChoice.selectedIndex].value,
-//     quantity: kanapQuantity.value,
-// };
 
 class Kanap {
     constructor() {
@@ -89,12 +72,22 @@ class Kanap {
         let foundProduct = this.kanap.find(
             (p) => p.id == productCart.id && p.color == productCart.color
         );
-        if (foundProduct != undefined) {
-            foundProduct.quantity = kanapQuantity.value;
-        } else {
-            productCart.quantity = kanapQuantity.value;
-            this.kanap.push(productCart);
+        if (
+            kanapQuantity.value > 0 &&
+            kanapColorChoice.options[kanapColorChoice.selectedIndex].value != ""
+        ) {
+            if (foundProduct != undefined) {
+                foundProduct.quantity = kanapQuantity.value;
+                console.log(foundProduct.color);
+            } else {
+                // productCart.quantity = kanapQuantity.value;
+                this.kanap.push(productCart);
+            }
         }
+        // else {
+        //     console.log(foundProduct);
+        //     this.removeKanap(foundProduct);
+        // }
         this.saveKanapCartInLocalStorage();
     }
 
@@ -106,6 +99,7 @@ class Kanap {
     }
 
     changeQuantity(productCart, quantity) {
+        console.log("je joue");
         let foundProduct = this.kanap.find(
             (p) => p.id == productCart.id && p.color == productCart.color
         );
@@ -121,16 +115,16 @@ class Kanap {
 
     getNumberProduct() {
         let number = 0;
-        for (let product of this.kanap) {
-            number += product.quantity;
+        for (let item of this.kanap) {
+            number += item.quantity;
         }
         return number;
     }
 
     getTotalPrice() {
         let total = 0;
-        for (let product of this.kanap) {
-            total += product.quantity * product.price;
+        for (let item of this.kanap) {
+            total += item.quantity * item.price;
         }
         return total;
     }
@@ -143,19 +137,17 @@ btnAddToCart.addEventListener("click", () => {
         color: kanapColorChoice.options[kanapColorChoice.selectedIndex].value,
         quantity: kanapQuantity.value,
     });
-    console.log(productCart);
-    // addKanap(productCart);
 
-    //
-    //
-    //
-    // let productCart = {
-    //     id: id,
-    //     color: kanapColorChoice.options[kanapColorChoice.selectedIndex].value,
-    //     quantity: kanapQuantity.value,
-    // };
-    // addKanap(productCart);
+    // productCart.changeQuantity(productCart, quantity);
+
+    // if ((this.productCart.quantity = 0)) {
+    //     productCart.removeKanap(productCart);
+    // }
+
+    // console.log(productCart[1]);
 });
+
+//
 // function saveKanapCartInLocalStorage(kanap) {
 //     localStorage.setItem("kanapCart", JSON.stringify(kanap));
 // }
@@ -225,60 +217,9 @@ btnAddToCart.addEventListener("click", () => {
 //     return number;
 // }
 
-// btnAddToCart.addEventListener("click", () => {
-//     let productCart = {
-//         id: id,
-//         color: kanapColorChoice.options[kanapColorChoice.selectedIndex].value,
-//         quantity: kanapQuantity.value,
-//     };
-//     addKanap(productCart);
-// });
-
 //
 //
 //
 //
-
-// let productInLocalStorage = JSON.parse(localStorage.getItem("kanapCart"));
-
-// function addKanapToLocalStorage(cart) {
-//     productInLocalStorage.push(cart);
-//     localStorage.setItem("kanapCart", JSON.stringify(productInLocalStorage));
-// }
-
-// btnAddToCart.addEventListener("click", () => {
-//     let cart = {
-//         id: id,
-//         color: kanapColorChoice.options[kanapColorChoice.selectedIndex].value,
-//         quantity: kanapQuantity.value,
-//     };
-//     console.log(productInLocalStorage);
-
-//     if (productInLocalStorage) {
-//         for (j = 0; j < productInLocalStorage.length; j++) {
-//             if (
-//                 cart.id == productInLocalStorage[j].id &&
-//                 cart.color == productInLocalStorage[j].color
-//             ) {
-//                 // productInLocalStorage.splice(j, 1);
-
-//                 addKanapToLocalStorage(cart);
-//                 console.log("si id & color =");
-//             } else {
-//                 addKanapToLocalStorage(cart);
-//                 console.log("id & color pas =");
-//             }
-//             console.log("fin de boucle for");
-//         }
-//         console.log("1er if");
-//     } else {
-//         productInLocalStorage = [];
-//         addKanapToLocalStorage(cart);
-//         console.log("creation du table");
-//     }
-// });
 
 displayInfo();
-
-// let itemLocation = document.querySelector(".item");
-// console.log(itemLocation);

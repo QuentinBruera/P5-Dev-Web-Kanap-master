@@ -15,6 +15,7 @@ async function getKanap() {
         console.log(response.error);
     }
 }
+
 /*
 function itemsSectionDisplay() {
     itemsSection.innerHTML = kanapData
@@ -34,6 +35,7 @@ function itemsSectionDisplay() {
 }*/
 async function displayKanap() {
     let products = await getKanap();
+    // console.log(products);
     let fragment = document.createDocumentFragment();
     products.forEach((product) => {
         let link = document.createElement("a");
