@@ -104,7 +104,7 @@ async function displayCart() {
         // console.log(productCart[i]);
 
         inputNumber[i].addEventListener("change", (e) => {
-            pQuantityFinal.innerHTML = `<p>Qté : ${e.target.value}</p>`;
+            pQuantityFinal.innerText = `Qté : ${e.target.value}`;
             changeQuantity(
                 articleDatasetId,
                 articleDatasetColor,
