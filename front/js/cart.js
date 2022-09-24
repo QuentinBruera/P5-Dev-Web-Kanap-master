@@ -25,19 +25,39 @@ function numberWithSpace(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
+function saveKanapCartInLocalStorage(kanap) {
+    localStorage.setItem("kanapCart", JSON.stringify(kanap));
+}
+
+function changeQuantity(id, color, value) {
+    let kanap = getKanapCartInLocalStorage();
+    let foundProduct = kanap.find((p) => p.id == id && p.color == color);
+    if (foundProduct != undefined) {
+        foundProduct.quantity = value;
+        console.log("je marche");
+        saveKanapCartInLocalStorage(kanap);
+        if (foundProduct.quantity <= 0) {
+            removeKanap(foundProduct);
+        } else {
+            saveKanapCartInLocalStorage(kanap);
+        }
+    }
+}
+
 async function displayCart() {
     let productCart = await getKanapCartInLocalStorage();
     let allProducts = await getKanap();
     console.log(allProducts);
     let fragment = document.createDocumentFragment();
-    productCart.forEach(async (product) => {
-        // console.log(product.id);
-        let objectPorductFull = allProducts.find((p) => p._id == product.id);
-        console.log(objectPorductFull);
+    for (i = 0; i < productCart.length; i++) {
+        console.log(i);
+        let objectPorductFull = allProducts.find(
+            (p) => p._id == productCart[i].id
+        );
         let article = document.createElement("article");
         article.className = "cart__item";
-        article.dataset.id = product.id;
-        article.dataset.color = product.color;
+        article.dataset.id = productCart[i].id;
+        article.dataset.color = productCart[i].color;
         article.innerHTML = `
         <div class="cart__item__img">
         <img src=${objectPorductFull.imageUrl} alt="${
@@ -47,14 +67,14 @@ async function displayCart() {
         <div class="cart__item__content">
         <div class="cart__item__content__description">
         <h2>${objectPorductFull.name}</h2>
-        <p>${product.color}</p>
+        <p>${productCart[i].color}</p>
         <p>${numberWithSpace(objectPorductFull.price)} €</p>
         </div>
         <div class="cart__item__content__settings">
         <div class="cart__item__content__settings__quantity">
-        <p>Qté : ${product.quantity}</p>
+        <p>Qté : ${productCart[i].quantity}</p>
         <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${
-            product.quantity
+            productCart[i].quantity
         }">
         </div>
         <div class="cart__item__content__settings__delete">
@@ -64,7 +84,37 @@ async function displayCart() {
         </div>
         `;
         fragment.appendChild(article);
-    });
-    sectionCartItems.appendChild(fragment);
+        sectionCartItems.appendChild(fragment);
+
+        let inputNumber = document.querySelectorAll(".itemQuantity");
+        let pQuantity = document.querySelectorAll(
+            ".cart__item__content__settings__quantity > p"
+        );
+        let pQuantityFinal = pQuantity[i];
+        console.log(pQuantity[i]);
+        let articleByClass = document.querySelectorAll(".cart__item");
+        console.log(articleByClass[i].dataset.id);
+        let articleDatasetId = articleByClass[i].dataset.id;
+        let articleDatasetColor = articleByClass[i].dataset.color;
+
+        // article.dataset.id = productCart[i].id;
+        // article.dataset.color = productCart[i].color;
+
+        // console.log(inputNumber[i]);
+        // console.log(productCart[i]);
+
+        inputNumber[i].addEventListener("change", (e) => {
+            pQuantityFinal.innerHTML = `<p>Qté : ${e.target.value}</p>`;
+            changeQuantity(
+                articleDatasetId,
+                articleDatasetColor,
+                e.target.value
+            );
+            console.log(e.target.value);
+            console.log(e);
+            // displayCart();
+        });
+    }
 }
+
 displayCart();
