@@ -34,7 +34,6 @@ function changeQuantity(id, color, value) {
     let foundProduct = kanap.find((p) => p.id == id && p.color == color);
     if (foundProduct != undefined) {
         foundProduct.quantity = value;
-        console.log("je marche");
         saveKanapCartInLocalStorage(kanap);
         if (foundProduct.quantity <= 0) {
             removeKanap(foundProduct);
@@ -42,6 +41,18 @@ function changeQuantity(id, color, value) {
             saveKanapCartInLocalStorage(kanap);
         }
     }
+}
+
+function removeKanap(id, color) {
+    let kanap = getKanapCartInLocalStorage();
+    console.log(kanap);
+
+    let foundProduct = kanap.find((p) => p.id == id && p.color == color);
+    console.log(foundProduct);
+    kanap = kanap.filter((p) => p != foundProduct);
+
+    console.log(kanap);
+    saveKanapCartInLocalStorage(kanap);
 }
 
 async function displayCart() {
@@ -97,12 +108,6 @@ async function displayCart() {
         let articleDatasetId = articleByClass[i].dataset.id;
         let articleDatasetColor = articleByClass[i].dataset.color;
 
-        // article.dataset.id = productCart[i].id;
-        // article.dataset.color = productCart[i].color;
-
-        // console.log(inputNumber[i]);
-        // console.log(productCart[i]);
-
         inputNumber[i].addEventListener("change", (e) => {
             pQuantityFinal.innerText = `Qté : ${e.target.value}`;
             changeQuantity(
@@ -110,9 +115,14 @@ async function displayCart() {
                 articleDatasetColor,
                 e.target.value
             );
-            console.log(e.target.value);
-            console.log(e);
-            // displayCart();
+        });
+
+        let deleteBtn = document.querySelectorAll(".deleteItem");
+
+        deleteBtn[i].addEventListener("click", () => {
+            removeKanap(articleDatasetId, articleDatasetColor);
+            console.log(articleDatasetId);
+            console.log(articleDatasetColor);
         });
     }
 }
