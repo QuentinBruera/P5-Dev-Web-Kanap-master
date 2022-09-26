@@ -78,7 +78,7 @@ class Kanap {
         ) {
             if (foundProduct != undefined) {
                 foundProduct.quantity = kanapQuantity.value;
-                console.log(foundProduct.color);
+                // console.log(foundProduct.color);
             } else {
                 // productCart.quantity = kanapQuantity.value;
                 this.kanap.push(productCart);
