@@ -309,6 +309,12 @@
 const sectionCartItems = document.getElementById("cart__items");
 // console.log(sectionCartItems);
 
+const totalQuantity = document.getElementById("totalQuantity");
+// console.log(totalQuantity);
+
+const totalPrice = document.getElementById("totalPrice");
+// console.log(totalPrice);
+
 async function getKanap() {
     const response = await fetch("http://localhost:3000/api/products");
     if (response.ok) {
@@ -363,6 +369,28 @@ function saveKanapCartInLocalStorage(kanap) {
     localStorage.setItem("kanapCart", JSON.stringify(kanap));
 }
 
+function totalQuantityy() {
+    let kanap = getKanapCartInLocalStorage();
+    number = 0;
+    for (let product of kanap) {
+        number = number + parseInt(product.quantity);
+    }
+    totalQuantity.innerText = number;
+}
+
+function totalPricee(allProducts) {
+    let kanap = getKanapCartInLocalStorage();
+    total = 0;
+    for (j = 0; j < kanap.length; j++) {
+        let objectPorductFullForPrice = allProducts.find(
+            (p) => p._id == kanap[j].id
+        );
+        total += kanap[j].quantity * objectPorductFullForPrice.price;
+
+        totalPrice.innerText = total;
+    }
+}
+
 function loopDisplay(productCart, allProducts) {
     let fragment = document.createDocumentFragment();
     for (i = 0; i < productCart.length; i++) {
@@ -407,10 +435,7 @@ function loopDisplay(productCart, allProducts) {
             ".cart__item__content__settings__quantity > p"
         );
         let pQuantityFinal = pQuantity[i];
-        // console.log(pQuantity[i]);
-        // console.log(pQuantityFinal);
         let articleByClass = document.querySelectorAll(".cart__item");
-        // console.log(articleByClass[i].dataset.id);
         let articleDatasetId = articleByClass[i].dataset.id;
         let articleDatasetColor = articleByClass[i].dataset.color;
 
@@ -421,6 +446,8 @@ function loopDisplay(productCart, allProducts) {
                 articleDatasetColor,
                 e.target.value
             );
+            totalQuantityy();
+            totalPricee(allProducts);
         });
 
         let deleteBtn = document.querySelectorAll(".deleteItem");
@@ -428,15 +455,9 @@ function loopDisplay(productCart, allProducts) {
         let deleteKanapDisplay = elementRemove[i];
         deleteBtn[i].addEventListener("click", () => {
             removeKanap(articleDatasetId, articleDatasetColor);
-            // deleteKanapDisplay.innerHTML = `<h1>J'ai changé !</h1>`;
-            // deleteKanapDisplay.innerHTML = "";
             deleteKanapDisplay.remove();
-            console.log(articleDatasetId);
-            console.log(articleDatasetColor);
-
-            //     elementRemove.remove();
-            //     console.log(elementRemove);
-            //     console.log(elementRemove[i]);
+            totalQuantityy();
+            totalPricee(allProducts);
         });
     }
 }
@@ -445,6 +466,59 @@ async function displayCart() {
     let productCart = await getKanapCartInLocalStorage();
     let allProducts = await getKanap();
     loopDisplay(productCart, allProducts);
+    totalQuantityy();
+    totalPricee(allProducts);
 }
+
+let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
+// console.log(firstNameErrorMsg);
+firstName.addEventListener("input", (e) => {
+    if (!e.target.value.match(/^[a-zA-Z_'.-]*$/)) {
+        firstNameErrorMsg.innerText = "Veuillez déclarer un Prénom correct";
+    } else {
+        firstNameErrorMsg.innerText = "";
+    }
+    // !e.target.value.match(/^[a-zA-Z0-9_.-]*$/);
+});
+
+let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+// console.log(lastNameErrorMsg);
+lastName.addEventListener("input", (e) => {
+    if (!e.target.value.match(/^[a-zA-Z_'.-]*$/)) {
+        lastNameErrorMsg.innerText = "Veuillez déclarer un Nom correct";
+    } else {
+        lastNameErrorMsg.innerText = "";
+    }
+});
+
+let addressErrorMsg = document.getElementById("addressErrorMsg");
+// console.log(addressErrorMsg);
+address.addEventListener("input", (e) => {
+    if (!e.target.value.match(/^[0-9]*[a-zA-Z\s,'.-]*$/)) {
+        addressErrorMsg.innerText = "Veuillez déclarer une Adresse correct";
+    } else {
+        addressErrorMsg.innerText = "";
+    }
+});
+
+let cityErrorMsg = document.getElementById("cityErrorMsg");
+// console.log(cityErrorMsg);
+city.addEventListener("input", (e) => {
+    if (!e.target.value.match(/^[a-zA-Z\s_'.-]*$/)) {
+        cityErrorMsg.innerText = "Veuillez déclarer ue Ville correct";
+    } else {
+        cityErrorMsg.innerText = "";
+    }
+});
+
+let emailErrorMsg = document.getElementById("emailErrorMsg");
+// console.log(emailErrorMsg);
+email.addEventListener("input", (e) => {
+    if (!e.target.value.match(/^[\w_.-]+@[\w-]+\.[a-z]{2,4}$/i)) {
+        emailErrorMsg.innerText = "Veuillez déclarer un Email correct";
+    } else {
+        emailErrorMsg.innerText = "";
+    }
+});
 
 displayCart();

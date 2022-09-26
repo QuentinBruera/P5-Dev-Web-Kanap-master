@@ -212,9 +212,9 @@ btnAddToCart.addEventListener("click", () => {
 //     let kanap = getKanapCartInLocalStorage();
 //     let total = 0;
 //     for (let product of kanap) {
-//         number += product.quantity * product.price;
+//         total += product.quantity * product.price;
 //     }
-//     return number;
+//     return total;
 // }
 
 //
