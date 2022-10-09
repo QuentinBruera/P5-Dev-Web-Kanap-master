@@ -77,13 +77,26 @@ class Kanap {
             kanapColorChoice.options[kanapColorChoice.selectedIndex].value != ""
         ) {
             if (foundProduct != undefined) {
-                foundProduct.quantity = kanapQuantity.value;
+                foundProduct.quantity =
+                    parseInt(foundProduct.quantity) +
+                    parseInt(kanapQuantity.value);
                 // console.log(foundProduct.color);
+                if (foundProduct.quantity > 100) {
+                    window.alert("La quantité maximum est de 100");
+                    foundProduct.quantity = 100;
+                    kanapQuantity.value = 100;
+                }
             } else {
                 // productCart.quantity = kanapQuantity.value;
                 this.kanap.push(productCart);
             }
         }
+        // if (kanapQuantity > 100) {
+        //     window.alert("La quantité maximum est de 100");
+        //     kanapQuantity = 100;
+        //     foundProduct.quantity = 100;
+        // }
+
         // else {
         //     console.log(foundProduct);
         //     this.removeKanap(foundProduct);
@@ -113,21 +126,21 @@ class Kanap {
         }
     }
 
-    getNumberProduct() {
-        let number = 0;
-        for (let item of this.kanap) {
-            number += item.quantity;
-        }
-        return number;
-    }
+    // getNumberProduct() {
+    //     let number = 0;
+    //     for (let item of this.kanap) {
+    //         number += item.quantity;
+    //     }
+    //     return number;
+    // }
 
-    getTotalPrice() {
-        let total = 0;
-        for (let item of this.kanap) {
-            total += item.quantity * item.price;
-        }
-        return total;
-    }
+    // getTotalPrice() {
+    //     let total = 0;
+    //     for (let item of this.kanap) {
+    //         total += item.quantity * item.price;
+    //     }
+    //     return total;
+    // }
 }
 
 btnAddToCart.addEventListener("click", () => {

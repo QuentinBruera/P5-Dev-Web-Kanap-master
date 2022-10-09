@@ -344,13 +344,20 @@ function changeQuantity(id, color, value) {
     let foundProduct = kanap.find((p) => p.id == id && p.color == color);
     if (foundProduct != undefined) {
         foundProduct.quantity = value;
-        saveKanapCartInLocalStorage(kanap);
-        if (foundProduct.quantity <= 0) {
-            removeKanap(foundProduct);
-        } else {
-            saveKanapCartInLocalStorage(kanap);
-        }
+        // if (value > 100) {
+        //     foundProduct.quantity = 100;
+        // } else {
+        //     foundProduct.quantity = value;
+        // }
+
+        // saveKanapCartInLocalStorage(kanap);
+        // if (foundProduct.quantity <= 0) {
+        //     removeKanap(foundProduct);
+        // } else {
+        //     // saveKanapCartInLocalStorage(kanap);
+        // }
     }
+    saveKanapCartInLocalStorage(kanap);
 }
 
 function removeKanap(id, color) {
@@ -435,31 +442,51 @@ function loopDisplay(productCart, allProducts) {
             ".cart__item__content__settings__quantity > p"
         );
         let pQuantityFinal = pQuantity[i];
-        let articleByClass = document.querySelectorAll(".cart__item");
-        let articleDatasetId = articleByClass[i].dataset.id;
-        let articleDatasetColor = articleByClass[i].dataset.color;
+
+        // let articleByClass = document.querySelectorAll(".cart__item");
+        // let articleDatasetId = articleByClass[i].dataset.id;
+        // let articleDatasetColor = articleByClass[i].dataset.color;
 
         inputNumber[i].addEventListener("change", (e) => {
-            pQuantityFinal.innerText = `Qté : ${e.target.value}`;
-            changeQuantity(
-                articleDatasetId,
-                articleDatasetColor,
-                e.target.value
-            );
+            let article = e.target.closest("article");
+            let id = article.dataset.id;
+            let color = article.dataset.color;
+            let newQte = e.target.value;
+            if (e.target.value > 100) {
+                window.alert("La quantité maximum est de 100");
+                e.target.value = 100;
+                newQte = 100;
+            } else if (e.target.value < 1) {
+                removeKanap(id, color);
+                article.remove();
+            }
+            pQuantityFinal.innerText = `Qté : ${newQte}`;
+            // pQuantityFinal.innerText = `Qté : ${newQte}`;
+            changeQuantity(id, color, newQte);
             totalQuantityy();
             totalPricee(allProducts);
         });
 
         let deleteBtn = document.querySelectorAll(".deleteItem");
-        let elementRemove = document.querySelectorAll("article");
-        let deleteKanapDisplay = elementRemove[i];
-        deleteBtn[i].addEventListener("click", () => {
-            removeKanap(articleDatasetId, articleDatasetColor);
-            deleteKanapDisplay.remove();
+
+        // let elementRemove = document.querySelectorAll("article");
+        // let deleteKanapDisplay = elementRemove[i];
+
+        deleteBtn[i].addEventListener("click", (e) => {
+            let article = e.target.closest("article");
+            let id = article.dataset.id;
+            let color = article.dataset.color;
+
+            removeKanap(id, color);
+            article.remove();
+
+            // removeKanap(articleDatasetId, articleDatasetColor);
+            // deleteKanapDisplay.remove();
             totalQuantityy();
             totalPricee(allProducts);
         });
     }
+    // sectionCartItems.appendChild(fragment);
 }
 
 async function displayCart() {
