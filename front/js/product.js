@@ -58,6 +58,7 @@ class Kanap {
     constructor() {
         let kanap = localStorage.getItem("kanapCart");
         if (kanap == null) {
+            // console.log("kanap = null");
             this.kanap = [];
         } else {
             this.kanap = JSON.parse(kanap);
@@ -234,5 +235,8 @@ btnAddToCart.addEventListener("click", () => {
 //
 //
 //
+
+uio = ["a"];
+console.log(uio);
 
 displayInfo();

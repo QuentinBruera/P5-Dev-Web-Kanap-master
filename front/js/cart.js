@@ -79,14 +79,21 @@ function totalQuantityy() {
 
 function totalPricee(allProducts) {
     let kanap = getKanapCartInLocalStorage();
+    console.log(kanap.length);
     total = 0;
-    for (j = 0; j < kanap.length; j++) {
-        let objectPorductFullForPrice = allProducts.find(
-            (p) => p._id == kanap[j].id
-        );
-        total += kanap[j].quantity * objectPorductFullForPrice.price;
 
+    if (kanap.length == 0) {
+        total = 0;
         totalPrice.innerText = total;
+    } else {
+        for (j = 0; j < kanap.length; j++) {
+            let objectPorductFullForPrice = allProducts.find(
+                (p) => p._id == kanap[j].id
+            );
+            total += kanap[j].quantity * objectPorductFullForPrice.price;
+
+            totalPrice.innerText = total;
+        }
     }
 }
 
@@ -285,7 +292,8 @@ document.querySelector("form").addEventListener("submit", (e) => {
         clientLastName &&
         clientAdresse &&
         clientCity &&
-        clientEmail
+        clientEmail &&
+        kanap.length > 0
     ) {
         let formInput = document.querySelectorAll(
             ".cart__order__form__question > input"
@@ -324,7 +332,7 @@ document.querySelector("form").addEventListener("submit", (e) => {
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
-                // document.location.href = `./confirmation.html?orderId=${data.orderId}`;
+                document.location.href = `./confirmation.html?orderId=${data.orderId}`;
             });
     }
 });
