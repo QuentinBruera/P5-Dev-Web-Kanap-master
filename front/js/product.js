@@ -83,7 +83,9 @@ class Kanap {
                     parseInt(kanapQuantity.value);
                 // console.log(foundProduct.color);
                 if (foundProduct.quantity > 100) {
-                    window.alert("La quantité maximum est de 100");
+                    window.alert(
+                        "Votre panier a atteint la quantité maximale de 100 articles pour cette couleur."
+                    );
                     foundProduct.quantity = 100;
                     kanapQuantity.value = 100;
                 }
@@ -91,6 +93,10 @@ class Kanap {
                 // productCart.quantity = kanapQuantity.value;
                 this.kanap.push(productCart);
             }
+        } else {
+            window.alert(
+                "Veuillez choisir une couleur et un nombre d'article(s) (1-100)"
+            );
         }
         // if (kanapQuantity > 100) {
         //     window.alert("La quantité maximum est de 100");
@@ -235,8 +241,5 @@ btnAddToCart.addEventListener("click", () => {
 //
 //
 //
-
-uio = ["a"];
-console.log(uio);
 
 displayInfo();

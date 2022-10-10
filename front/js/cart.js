@@ -20,7 +20,8 @@ function getKanapCartInLocalStorage() {
     let kanap = localStorage.getItem("kanapCart");
     if (kanap == null) {
         console.log("panier vide");
-        // return [];
+        kanapCart = [];
+        localStorage.setItem("kanapCart", JSON.stringify(kanapCart));
     } else {
         console.log("panier chargé");
         return JSON.parse(kanap);
@@ -79,7 +80,7 @@ function totalQuantityy() {
 
 function totalPricee(allProducts) {
     let kanap = getKanapCartInLocalStorage();
-    console.log(kanap.length);
+    // console.log(kanap.length);
     total = 0;
 
     if (kanap.length == 0) {
@@ -286,54 +287,59 @@ email.addEventListener("input", (e) => {
 document.querySelector("form").addEventListener("submit", (e) => {
     e.preventDefault();
     let kanap = getKanapCartInLocalStorage();
-    console.log(kanap);
-    if (
-        clientFirstName &&
-        clientLastName &&
-        clientAdresse &&
-        clientCity &&
-        clientEmail &&
-        kanap.length > 0
-    ) {
-        let formInput = document.querySelectorAll(
-            ".cart__order__form__question > input"
+    if (kanap.length == 0 || kanap == false) {
+        window.alert(
+            "Il n'y a aucun article dans le panier ! Vous devez séléctionner au moins un article pour commander."
         );
-        // console.log(formInput);
-        formInput.forEach((input) => (input.value = ""));
+    } else {
+        if (
+            clientFirstName &&
+            clientLastName &&
+            clientAdresse &&
+            clientCity &&
+            clientEmail
+            // kanap.length > 0
+        ) {
+            let formInput = document.querySelectorAll(
+                ".cart__order__form__question > input"
+            );
+            // console.log(formInput);
+            formInput.forEach((input) => (input.value = ""));
 
-        let productCart = getKanapCartInLocalStorage();
-        // console.log(productCart);
-        arrayProducts = [];
+            let productCart = getKanapCartInLocalStorage();
+            // console.log(productCart);
+            arrayProducts = [];
 
-        for (i = 0; productCart.length > i; i++) {
-            arrayProducts.push(productCart[i].id);
+            for (i = 0; productCart.length > i; i++) {
+                arrayProducts.push(productCart[i].id);
+            }
+            // console.log(arrayProducts);
+
+            // console.log(arrayProductTwo[1]);
+            const dataPost = {
+                contact: {
+                    firstName: clientFirstName,
+                    lastName: clientLastName,
+                    address: clientAdresse,
+                    city: clientCity,
+                    email: clientEmail,
+                },
+                products: arrayProducts,
+            };
+
+            const post = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(dataPost),
+            };
+            // console.log(post);
+            fetch("http://localhost:3000/api/products/order", post)
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data);
+                    document.location.href = `./confirmation.html?orderId=${data.orderId}`;
+                });
         }
-        // console.log(arrayProducts);
-
-        // console.log(arrayProductTwo[1]);
-        const dataPost = {
-            contact: {
-                firstName: clientFirstName,
-                lastName: clientLastName,
-                address: clientAdresse,
-                city: clientCity,
-                email: clientEmail,
-            },
-            products: arrayProducts,
-        };
-
-        const post = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(dataPost),
-        };
-        // console.log(post);
-        fetch("http://localhost:3000/api/products/order", post)
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-                document.location.href = `./confirmation.html?orderId=${data.orderId}`;
-            });
     }
 });
 displayCart();
