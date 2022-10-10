@@ -54,13 +54,13 @@ function changeQuantity(id, color, value) {
 
 function removeKanap(id, color) {
     let kanap = getKanapCartInLocalStorage();
-    console.log(kanap);
+    // console.log(kanap);
 
     let foundProduct = kanap.find((p) => p.id == id && p.color == color);
-    console.log(foundProduct);
+    // console.log(foundProduct);
     kanap = kanap.filter((p) => p != foundProduct);
 
-    console.log(kanap);
+    // console.log(kanap);
     saveKanapCartInLocalStorage(kanap);
 }
 
@@ -93,7 +93,7 @@ function totalPricee(allProducts) {
 function loopDisplay(productCart, allProducts) {
     let fragment = document.createDocumentFragment();
     for (i = 0; i < productCart.length; i++) {
-        console.log(i);
+        // console.log(i);
         let objectPorductFull = allProducts.find(
             (p) => p._id == productCart[i].id
         );
@@ -278,7 +278,8 @@ email.addEventListener("input", (e) => {
 
 document.querySelector("form").addEventListener("submit", (e) => {
     e.preventDefault();
-    // jkrjkl();
+    let kanap = getKanapCartInLocalStorage();
+    console.log(kanap);
     if (
         clientFirstName &&
         clientLastName &&
@@ -286,23 +287,6 @@ document.querySelector("form").addEventListener("submit", (e) => {
         clientCity &&
         clientEmail
     ) {
-        // const contact = {
-        //     firstName: clientFirstName,
-        //     lastName: clientLastName,
-        //     address: clientAdresse,
-        //     city: clientCity,
-        //     email: clientEmail,
-        // };
-        const contact = {
-            firstName: clientFirstName,
-            lastName: clientLastName,
-            address: clientAdresse,
-            city: clientCity,
-            email: clientEmail,
-        };
-
-        console.log(contact);
-
         let formInput = document.querySelectorAll(
             ".cart__order__form__question > input"
         );
@@ -310,12 +294,13 @@ document.querySelector("form").addEventListener("submit", (e) => {
         formInput.forEach((input) => (input.value = ""));
 
         let productCart = getKanapCartInLocalStorage();
+        // console.log(productCart);
         arrayProducts = [];
 
         for (i = 0; productCart.length > i; i++) {
             arrayProducts.push(productCart[i].id);
         }
-        console.log(arrayProducts);
+        // console.log(arrayProducts);
 
         // console.log(arrayProductTwo[1]);
         const dataPost = {
@@ -333,16 +318,14 @@ document.querySelector("form").addEventListener("submit", (e) => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(dataPost),
-            // mode: "cors",
-            // credentials: "same-origin",
         };
-        console.log(post);
+        // console.log(post);
         fetch("http://localhost:3000/api/products/order", post)
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
+                // document.location.href = `./confirmation.html?orderId=${data.orderId}`;
             });
     }
 });
-
 displayCart();
