@@ -37,18 +37,6 @@ function changeQuantity(id, color, value) {
     let foundProduct = kanap.find((p) => p.id == id && p.color == color);
     if (foundProduct != undefined) {
         foundProduct.quantity = value;
-        // if (value > 100) {
-        //     foundProduct.quantity = 100;
-        // } else {
-        //     foundProduct.quantity = value;
-        // }
-
-        // saveKanapCartInLocalStorage(kanap);
-        // if (foundProduct.quantity <= 0) {
-        //     removeKanap(foundProduct);
-        // } else {
-        //     // saveKanapCartInLocalStorage(kanap);
-        // }
     }
     saveKanapCartInLocalStorage(kanap);
 }
@@ -143,10 +131,6 @@ function loopDisplay(productCart, allProducts) {
         );
         let pQuantityFinal = pQuantity[i];
 
-        // let articleByClass = document.querySelectorAll(".cart__item");
-        // let articleDatasetId = articleByClass[i].dataset.id;
-        // let articleDatasetColor = articleByClass[i].dataset.color;
-
         inputNumber[i].addEventListener("change", (e) => {
             let article = e.target.closest("article");
             let id = article.dataset.id;
@@ -161,16 +145,12 @@ function loopDisplay(productCart, allProducts) {
                 article.remove();
             }
             pQuantityFinal.innerText = `Qté : ${newQte}`;
-            // pQuantityFinal.innerText = `Qté : ${newQte}`;
             changeQuantity(id, color, newQte);
             totalQuantityy();
             totalPricee(allProducts);
         });
 
         let deleteBtn = document.querySelectorAll(".deleteItem");
-
-        // let elementRemove = document.querySelectorAll("article");
-        // let deleteKanapDisplay = elementRemove[i];
 
         deleteBtn[i].addEventListener("click", (e) => {
             let article = e.target.closest("article");
@@ -180,8 +160,6 @@ function loopDisplay(productCart, allProducts) {
             removeKanap(id, color);
             article.remove();
 
-            // removeKanap(articleDatasetId, articleDatasetColor);
-            // deleteKanapDisplay.remove();
             totalQuantityy();
             totalPricee(allProducts);
         });
@@ -208,7 +186,6 @@ firstName.addEventListener("input", (e) => {
         firstNameErrorMsg.innerText = "";
         clientFirstName = e.target.value;
     }
-    // !e.target.value.match(/^[a-zA-Z0-9_.-]*$/);
 });
 
 let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
@@ -260,36 +237,14 @@ email.addEventListener("input", (e) => {
     } else {
         emailErrorMsg.innerText = "";
         clientEmail = e.target.value;
-
-        // if (e.target.value) {
-        //     emailll = e.target.value;
-        // } else {
-        //     emailll = null;
-        // }
     }
 });
-
-// let form = document.querySelector(".cart__order__form");
-// console.log(form);
-// let arrayProduct = [];
-// let arrayProductTwo = [];
-// let productCart = getKanapCartInLocalStorage();
-
-// async function jkrjkl() {
-//     for (i = 0; productCart.length > i; i++) {
-//         let kanaptestrecup = await getKanapById(productCart[i].id);
-//         arrayProductTwo.push(kanaptestrecup);
-//         // console.log(kanaptestrecup);
-//     }
-//     // console.log(arrayProductTwo);
-// }
-
 document.querySelector("form").addEventListener("submit", (e) => {
     e.preventDefault();
     let kanap = getKanapCartInLocalStorage();
     if (kanap.length == 0 || kanap == false) {
         window.alert(
-            "Il n'y a aucun article dans le panier ! Vous devez séléctionner au moins un article pour commander."
+            "Il n'y a aucun article dans le panier ! Vous devez séléctionner au moins un article pour passer une commande."
         );
     } else {
         if (
@@ -298,7 +253,6 @@ document.querySelector("form").addEventListener("submit", (e) => {
             clientAdresse &&
             clientCity &&
             clientEmail
-            // kanap.length > 0
         ) {
             let formInput = document.querySelectorAll(
                 ".cart__order__form__question > input"
