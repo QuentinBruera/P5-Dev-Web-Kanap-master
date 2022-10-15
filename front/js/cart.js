@@ -239,6 +239,60 @@ email.addEventListener("input", (e) => {
         clientEmail = e.target.value;
     }
 });
+
+function formReset() {
+    let formInput = document.querySelectorAll(
+        ".cart__order__form__question > input"
+    );
+    // console.log(formInput);
+    formInput.forEach((input) => (input.value = ""));
+}
+
+function takeIdElementOnLocalStorage() {
+    let productCart = getKanapCartInLocalStorage();
+    // console.log(productCart);
+    arrayProducts = [];
+
+    for (i = 0; productCart.length > i; i++) {
+        arrayProducts.push(productCart[i].id);
+    }
+    // console.log(arrayProducts);
+}
+
+let dataPost = {};
+function dataPostFucntion() {
+    dataPost = {
+        contact: {
+            firstName: clientFirstName,
+            lastName: clientLastName,
+            address: clientAdresse,
+            city: clientCity,
+            email: clientEmail,
+        },
+        products: arrayProducts,
+    };
+    // console.log(dataPost);
+}
+
+let post = {};
+function postFunction() {
+    post = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dataPost),
+    };
+    // console.log(post);
+}
+
+function fetchOrderPost() {
+    fetch("http://localhost:3000/api/products/order", post)
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
+            document.location.href = `./confirmation.html?orderId=${data.orderId}`;
+        });
+}
+
 document.querySelector("form").addEventListener("submit", (e) => {
     e.preventDefault();
     let kanap = getKanapCartInLocalStorage();
@@ -254,46 +308,19 @@ document.querySelector("form").addEventListener("submit", (e) => {
             clientCity &&
             clientEmail
         ) {
-            let formInput = document.querySelectorAll(
-                ".cart__order__form__question > input"
-            );
-            // console.log(formInput);
-            formInput.forEach((input) => (input.value = ""));
+            formReset();
 
-            let productCart = getKanapCartInLocalStorage();
-            // console.log(productCart);
-            arrayProducts = [];
+            takeIdElementOnLocalStorage();
 
-            for (i = 0; productCart.length > i; i++) {
-                arrayProducts.push(productCart[i].id);
-            }
-            // console.log(arrayProducts);
+            dataPostFucntion();
+            // console.log(dataPost);
 
-            // console.log(arrayProductTwo[1]);
-            const dataPost = {
-                contact: {
-                    firstName: clientFirstName,
-                    lastName: clientLastName,
-                    address: clientAdresse,
-                    city: clientCity,
-                    email: clientEmail,
-                },
-                products: arrayProducts,
-            };
-
-            const post = {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(dataPost),
-            };
+            postFunction();
             // console.log(post);
-            fetch("http://localhost:3000/api/products/order", post)
-                .then((response) => response.json())
-                .then((data) => {
-                    console.log(data);
-                    document.location.href = `./confirmation.html?orderId=${data.orderId}`;
-                });
+
+            fetchOrderPost();
         }
     }
 });
+
 displayCart();
