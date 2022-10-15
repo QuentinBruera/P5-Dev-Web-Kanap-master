@@ -86,6 +86,49 @@ function totalPricee(allProducts) {
     }
 }
 
+function changeQuantityCart(allProducts) {
+    let inputNumber = document.querySelectorAll(".itemQuantity");
+    let pQuantity = document.querySelectorAll(
+        ".cart__item__content__settings__quantity > p"
+    );
+    let pQuantityFinal = pQuantity[i];
+
+    inputNumber[i].addEventListener("change", (e) => {
+        let article = e.target.closest("article");
+        let id = article.dataset.id;
+        let color = article.dataset.color;
+        let newQte = e.target.value;
+        if (e.target.value > 100) {
+            window.alert("La quantité max est de 100");
+            e.target.value = 100;
+            newQte = 100;
+        } else if (e.target.value < 1) {
+            removeKanap(id, color);
+            article.remove();
+        }
+        pQuantityFinal.innerText = `Qté : ${newQte}`;
+        changeQuantity(id, color, newQte);
+        totalQuantityy();
+        totalPricee(allProducts);
+    });
+}
+
+function deleteItemCart(allProducts) {
+    let deleteBtn = document.querySelectorAll(".deleteItem");
+
+    deleteBtn[i].addEventListener("click", (e) => {
+        let article = e.target.closest("article");
+        let id = article.dataset.id;
+        let color = article.dataset.color;
+
+        removeKanap(id, color);
+        article.remove();
+
+        totalQuantityy();
+        totalPricee(allProducts);
+    });
+}
+
 function loopDisplay(productCart, allProducts) {
     let fragment = document.createDocumentFragment();
     for (i = 0; i < productCart.length; i++) {
@@ -125,44 +168,8 @@ function loopDisplay(productCart, allProducts) {
         fragment.appendChild(article);
         sectionCartItems.appendChild(fragment);
 
-        let inputNumber = document.querySelectorAll(".itemQuantity");
-        let pQuantity = document.querySelectorAll(
-            ".cart__item__content__settings__quantity > p"
-        );
-        let pQuantityFinal = pQuantity[i];
-
-        inputNumber[i].addEventListener("change", (e) => {
-            let article = e.target.closest("article");
-            let id = article.dataset.id;
-            let color = article.dataset.color;
-            let newQte = e.target.value;
-            if (e.target.value > 100) {
-                window.alert("La quantité max est de 100");
-                e.target.value = 100;
-                newQte = 100;
-            } else if (e.target.value < 1) {
-                removeKanap(id, color);
-                article.remove();
-            }
-            pQuantityFinal.innerText = `Qté : ${newQte}`;
-            changeQuantity(id, color, newQte);
-            totalQuantityy();
-            totalPricee(allProducts);
-        });
-
-        let deleteBtn = document.querySelectorAll(".deleteItem");
-
-        deleteBtn[i].addEventListener("click", (e) => {
-            let article = e.target.closest("article");
-            let id = article.dataset.id;
-            let color = article.dataset.color;
-
-            removeKanap(id, color);
-            article.remove();
-
-            totalQuantityy();
-            totalPricee(allProducts);
-        });
+        changeQuantityCart(allProducts);
+        deleteItemCart(allProducts);
     }
     // sectionCartItems.appendChild(fragment);
 }
@@ -309,15 +316,11 @@ document.querySelector("form").addEventListener("submit", (e) => {
             clientEmail
         ) {
             formReset();
-
             takeIdElementOnLocalStorage();
-
             dataPostFucntion();
             // console.log(dataPost);
-
             postFunction();
             // console.log(post);
-
             fetchOrderPost();
         }
     }
