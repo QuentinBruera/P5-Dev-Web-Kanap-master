@@ -23,7 +23,7 @@ const kanapQuantity = document.getElementById("quantity");
 const btnAddToCart = document.getElementById("addToCart");
 // console.log(btnAddToCart);
 
-// Récupère le kanap en fonction de son ID dans l'API
+// Va chercher et stocke le produit en fonction de son ID dans l'API products
 async function getKanap(idKanap) {
     const response = await fetch(
         "http://localhost:3000/api/products/" + idKanap
@@ -40,7 +40,7 @@ function numberWithSpace(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
-// Affiche les informations du kanap
+// Affiche les informations du produit depuis l'API
 async function displayInfo() {
     let product = await getKanap(id);
     kanapImg.innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
@@ -65,18 +65,24 @@ class Kanap {
         }
     }
 
+    // Envoi les données dans le local storage
     saveKanapCartInLocalStorage() {
         localStorage.setItem("kanapCart", JSON.stringify(this.kanap));
     }
 
+    // Check les données avant de les envoyer dans le local storage
     addKanap(productCart) {
+        // Check si un élément avec le même id & color existe déjà dans le local storage
         let foundProduct = this.kanap.find(
             (p) => p.id == productCart.id && p.color == productCart.color
         );
+        // Check si une quantité et une couleur ont étaient sélectionné par l'utilisateur
         if (
             kanapQuantity.value > 0 &&
+            // kanapQuantity.value < 101 &&
             kanapColorChoice.options[kanapColorChoice.selectedIndex].value != ""
         ) {
+            // Si l'élément existe déjà dans le local storage il y sera mis à jour
             if (foundProduct != undefined) {
                 foundProduct.quantity =
                     parseInt(foundProduct.quantity) +
@@ -84,13 +90,30 @@ class Kanap {
                 // console.log(foundProduct.color);
                 if (foundProduct.quantity > 100) {
                     window.alert(
-                        "Votre panier a atteint la quantité maximale de 100 articles pour cette couleur."
+                        "Votre panier comporte 100 articles avec ces options et vous ne pouvez pas en ajouter d'avantage."
                     );
                     foundProduct.quantity = 100;
                     kanapQuantity.value = 100;
+                } else {
+                    window.alert(
+                        `Votre panier comporte ${foundProduct.quantity} articles avec ces options.`
+                    );
                 }
+                // Si l"élément n'existe pas dans le local storage il y sera ajouté
             } else {
-                this.kanap.push(productCart);
+                if (kanapQuantity.value > 100) {
+                    productCart.quantity = 100;
+                    this.kanap.push(productCart);
+                    kanapQuantity.value = 100;
+                    window.alert(
+                        "100 articles ont étaient ajoutés au panier et vous ne pouvez pas en ajouter d'avantage."
+                    );
+                } else {
+                    this.kanap.push(productCart);
+                    window.alert(
+                        `Votre panier comporte ${productCart.quantity} articles avec ces options.`
+                    );
+                }
             }
         } else {
             window.alert(
@@ -100,30 +123,9 @@ class Kanap {
 
         this.saveKanapCartInLocalStorage();
     }
-
-    removeKanap(productCart) {
-        this.kanap = this.kanap.filter(
-            (p) => p.id != productCart.id && p.color != productCart.color
-        );
-        this.saveKanapCartInLocalStorage();
-    }
-
-    changeQuantity(productCart, quantity) {
-        console.log("je joue");
-        let foundProduct = this.kanap.find(
-            (p) => p.id == productCart.id && p.color == productCart.color
-        );
-        if (foundProduct != undefined) {
-            foundProduct.quantity += quantity;
-            if (foundProduct.quantity <= 0) {
-                this.removeKanap(foundProduct);
-            } else {
-                this.saveKanapCartInLocalStorage();
-            }
-        }
-    }
 }
 
+// Utilise la class Kanap avec les données dans les inputs quand on clic sur le bouton "Ajouter au panier"
 btnAddToCart.addEventListener("click", () => {
     let productCart = new Kanap();
     productCart.addKanap({
@@ -132,4 +134,6 @@ btnAddToCart.addEventListener("click", () => {
         quantity: kanapQuantity.value,
     });
 });
+
+//Joue la fonction au chargement la page
 displayInfo();

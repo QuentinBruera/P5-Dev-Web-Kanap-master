@@ -1,5 +1,6 @@
 const itemsSection = document.getElementById("items");
 
+// Va chercher et stocke tous les produits de l'API products
 async function getKanap() {
     const response = await fetch("http://localhost:3000/api/products");
     if (response.ok) {
@@ -9,6 +10,7 @@ async function getKanap() {
     }
 }
 
+// Récupère l'API products, crée du code HTML pour chaque élément de l'API pour afficher les produits
 async function displayKanap() {
     let products = await getKanap();
     // console.log(products);
@@ -27,4 +29,5 @@ async function displayKanap() {
     itemsSection.appendChild(fragment);
 }
 
+//Joue la fonction au chargement la page
 displayKanap();

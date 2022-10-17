@@ -7,6 +7,7 @@ const totalQuantity = document.getElementById("totalQuantity");
 const totalPrice = document.getElementById("totalPrice");
 // console.log(totalPrice);
 
+// Va chercher et stocke tous les produits de l'API products
 async function getKanap() {
     const response = await fetch("http://localhost:3000/api/products");
     if (response.ok) {
@@ -16,6 +17,7 @@ async function getKanap() {
     }
 }
 
+// Va cherche les éléments de la clef "kanapCart" depuis le local storage et les stockes
 function getKanapCartInLocalStorage() {
     let kanap = localStorage.getItem("kanapCart");
     if (kanap == null) {
@@ -27,11 +29,12 @@ function getKanapCartInLocalStorage() {
         return JSON.parse(kanap);
     }
 }
-
+// Ajoute des séparateurs dans le nombre
 function numberWithSpace(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
+// Change la quantité du produit correspondant (id et couleur) dans le local storage
 function changeQuantity(id, color, value) {
     let kanap = getKanapCartInLocalStorage();
     let foundProduct = kanap.find((p) => p.id == id && p.color == color);
@@ -41,6 +44,7 @@ function changeQuantity(id, color, value) {
     saveKanapCartInLocalStorage(kanap);
 }
 
+// Supprime le produit correspondant (id et couleur) dans le local storage
 function removeKanap(id, color) {
     let kanap = getKanapCartInLocalStorage();
     // console.log(kanap);
@@ -53,10 +57,12 @@ function removeKanap(id, color) {
     saveKanapCartInLocalStorage(kanap);
 }
 
+// Envoi les données dans le local storage
 function saveKanapCartInLocalStorage(kanap) {
     localStorage.setItem("kanapCart", JSON.stringify(kanap));
 }
 
+// Donne et affiche la quantité total des produits qui sont dans le local storage et les affiches dynamiquement
 function totalQuantityy() {
     let kanap = getKanapCartInLocalStorage();
     number = 0;
@@ -66,6 +72,7 @@ function totalQuantityy() {
     totalQuantity.innerText = number;
 }
 
+// Donne et affiche le prix total des produits qui sont dans le local storage et les affiches dynamiquement
 function totalPricee(allProducts) {
     let kanap = getKanapCartInLocalStorage();
     // console.log(kanap.length);
@@ -86,6 +93,7 @@ function totalPricee(allProducts) {
     }
 }
 
+// Change (affichage et stockage) la quantité du produit quand l'input est changé par l'utilisateur
 function changeQuantityCart(allProducts) {
     let inputNumber = document.querySelectorAll(".itemQuantity");
     let pQuantity = document.querySelectorAll(
@@ -113,6 +121,7 @@ function changeQuantityCart(allProducts) {
     });
 }
 
+// Supprime (affichage et stockage) le produit quand l'input est clické par l'utilisateur
 function deleteItemCart(allProducts) {
     let deleteBtn = document.querySelectorAll(".deleteItem");
 
@@ -129,10 +138,10 @@ function deleteItemCart(allProducts) {
     });
 }
 
+// Affiche sur la page les produits qui sont dans stocké dans le localstorage
 function loopDisplay(productCart, allProducts) {
     let fragment = document.createDocumentFragment();
     for (i = 0; i < productCart.length; i++) {
-        // console.log(i);
         let objectPorductFull = allProducts.find(
             (p) => p._id == productCart[i].id
         );
@@ -171,9 +180,9 @@ function loopDisplay(productCart, allProducts) {
         changeQuantityCart(allProducts);
         deleteItemCart(allProducts);
     }
-    // sectionCartItems.appendChild(fragment);
 }
 
+// Fonction joué au chargement de la page, elle joue les fonctions d'affichage des produits, quantité et prix
 async function displayCart() {
     let productCart = await getKanapCartInLocalStorage();
     let allProducts = await getKanap();
@@ -185,6 +194,7 @@ async function displayCart() {
 let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
 // console.log(firstNameErrorMsg);
 let clientFirstName = "";
+// Check les informations dans l'input avec un regex
 firstName.addEventListener("input", (e) => {
     if (!e.target.value.match(/^[a-zA-Z_'.-]*$/)) {
         firstNameErrorMsg.innerText = "Veuillez déclarer un Prénom correct";
@@ -198,6 +208,7 @@ firstName.addEventListener("input", (e) => {
 let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
 // console.log(lastNameErrorMsg);
 let clientLastName = "";
+// Check les informations dans l'input avec un regex
 lastName.addEventListener("input", (e) => {
     if (!e.target.value.match(/^[a-zA-Z_'.-]*$/)) {
         lastNameErrorMsg.innerText = "Veuillez déclarer un Nom correct";
@@ -211,6 +222,7 @@ lastName.addEventListener("input", (e) => {
 let addressErrorMsg = document.getElementById("addressErrorMsg");
 // console.log(addressErrorMsg);
 let clientAdresse = "";
+// Check les informations dans l'input avec un regex
 address.addEventListener("input", (e) => {
     if (!e.target.value.match(/^[0-9]*[a-zA-Z\s,'.-]*$/)) {
         addressErrorMsg.innerText = "Veuillez déclarer une Adresse correct";
@@ -224,6 +236,7 @@ address.addEventListener("input", (e) => {
 let cityErrorMsg = document.getElementById("cityErrorMsg");
 // console.log(cityErrorMsg);
 let clientCity = "";
+// Check les informations dans l'input avec un regex
 city.addEventListener("input", (e) => {
     if (!e.target.value.match(/^[a-zA-Z\s_'.-]*$/)) {
         cityErrorMsg.innerText = "Veuillez déclarer ue Ville correct";
@@ -237,6 +250,7 @@ city.addEventListener("input", (e) => {
 let emailErrorMsg = document.getElementById("emailErrorMsg");
 // console.log(emailErrorMsg);
 let clientEmail = "";
+// Check les informations dans l'input avec un regex
 email.addEventListener("input", (e) => {
     if (!e.target.value.match(/^[\w_.-]+@[\w-]+\.[a-z]{2,3}$/i)) {
         emailErrorMsg.innerText = "Veuillez déclarer un Email correct";
@@ -247,6 +261,7 @@ email.addEventListener("input", (e) => {
     }
 });
 
+// Reset le formulaire une fois qu'il est soumis
 function formReset() {
     let formInput = document.querySelectorAll(
         ".cart__order__form__question > input"
@@ -255,6 +270,7 @@ function formReset() {
     formInput.forEach((input) => (input.value = ""));
 }
 
+// Récupérer et stocker dans un tableau les id des élement dans le local storage
 function takeIdElementOnLocalStorage() {
     let productCart = getKanapCartInLocalStorage();
     // console.log(productCart);
@@ -267,6 +283,7 @@ function takeIdElementOnLocalStorage() {
 }
 
 let dataPost = {};
+// Crée un objet avec les données du formulaire (objet) et les id des produits de la commande (tableau)
 function dataPostFucntion() {
     dataPost = {
         contact: {
@@ -282,6 +299,7 @@ function dataPostFucntion() {
 }
 
 let post = {};
+// Fonction methode POST
 function postFunction() {
     post = {
         method: "POST",
@@ -291,6 +309,7 @@ function postFunction() {
     // console.log(post);
 }
 
+// Envoi les données attendu par l'API products/order et récupère la réponse (orderId) et envoi sur la page de confirmation de commande
 function fetchOrderPost() {
     fetch("http://localhost:3000/api/products/order", post)
         .then((response) => response.json())
@@ -300,6 +319,7 @@ function fetchOrderPost() {
         });
 }
 
+// Fonction qui vérifie si le pannier existe et que le formulaire est valide. Si les vérifications sont acceptées alors il joue les fonctions appelées
 document.querySelector("form").addEventListener("submit", (e) => {
     e.preventDefault();
     let kanap = getKanapCartInLocalStorage();
@@ -326,4 +346,5 @@ document.querySelector("form").addEventListener("submit", (e) => {
     }
 });
 
+//Joue la fonction au chargement la page
 displayCart();
